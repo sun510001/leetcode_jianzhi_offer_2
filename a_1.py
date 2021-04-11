@@ -34,15 +34,45 @@
 """
 from typing import List
 
+
 class Solution:
     @classmethod
+    def binary_search(self, li, left, right, val):
+        while left <= right:
+            mid = (left + right) // 2
+            if li[mid][0] == val:
+                return mid
+            elif li[mid][0] > val:
+                right = mid - 1
+            else:
+                left = mid + 1
+        else:
+            return None
+
+    @classmethod
     def twoSum(self, nums: List[int], target: int) -> List[int]:
+        # for i in range(len(nums)):
+        #     for j in range(i, len(nums)):
+        #         if nums[i] + nums[j] == target:
+        #             return [i, j]
+        #
+        hashmap = [[num, i] for i, num in enumerate(nums)]
+        hashmap.sort(key=lambda x: x[0])
 
-
+        for i in range(len(hashmap)):
+            a = hashmap[i][0]
+            b = target - a  # target of binary search
+            if b >= a:
+                j = self.binary_search(hashmap, i+1, len(hashmap)-1, b)
+            else:
+                j = self.binary_search(hashmap, 0, i-1, b)
+            if j:
+                break
+        return [hashmap[i][1], hashmap[j][1]]
 
 
 if __name__ == '__main__':
-    nums = [2,7,11,15]
+    nums = [2, 7, 15, 11]
     target = 9
     out = Solution.twoSum(nums, target)
     print(out)
