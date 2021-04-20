@@ -3,9 +3,7 @@
 import copy
 import heapq
 import random
-
 from my_lib import cal_time
-
 
 class heap:
     @classmethod
@@ -92,10 +90,10 @@ class heap:
 
 class Node:
     def __init__(self, name, type='dir'):
-        self.name=name
-        self.type=type
-        self.children=[]
-        self.parent=None
+        self.name = name
+        self.type = type
+        self.children = []
+        self.parent = None
 
 
 class FileSystemTree:
@@ -134,6 +132,7 @@ class BiTreeNode:
         self.data = data
         self.lchild = None
         self.rchild = None
+        self.parent = None
 
     def pre_order(self):
         print(self.data, end=' ')
@@ -172,6 +171,133 @@ class BiTreeNode:
             print(ele.data, end=' ')
 
 
+class BST:
+    def __init__(self, li=None):
+        self.root = None
+        if li:
+            for val in li:
+                # self.root = self.insert_rec(self.root, val)  # for function insert
+                self.insert(val)  # for function insert_rec
+
+    def insert_rec(self, node, val):
+        if not node:
+            node = BiTreeNode(val)
+        elif val < node.data:
+            node.lchild = self.insert_rec(node.lchild, val)
+            node.lchild.parent = node
+        elif val > node.data:
+            node.rchild = self.insert_rec(node.rchild, val)
+            node.rchild.parent = node
+        return node
+
+    def insert(self, val):
+        node = self.root
+        if not node:
+            self.root = BiTreeNode(val)
+            return
+        while True:
+            if val < node.data:
+                if node.lchild:
+                    node = node.lchild
+                else:
+                    node.lchild = BiTreeNode(val)
+                    node.lchild.parent = node
+                    return
+            elif val > node.data:
+                if node.rchild:
+                    node = node.rchild
+                else:
+                    node.rchild = BiTreeNode(val)
+                    node.rchild.parent = node
+                    return
+            else:
+                return
+
+    def query(self, val):
+        node = self.root
+        while node:
+            if val < node.data:
+                node = node.lchild
+            elif val > node.data:
+                node = node.rchild
+            else:
+                return node
+        return None
+
+    def query_rec(self, node, val):
+        if not node:
+            return None
+        elif val < node.data:
+            return self.query_rec(node.lchild, val)
+        elif val > node.data:
+            return self.query_rec(node.rchild, val)
+        else:
+            return node
+
+    def delete(self, val):
+        if self.root:
+            target_node = self.query(val)
+            if target_node:
+                if target_node.lchild and not target_node.rchild:
+                    # have left child, but no right child
+                    if target_node.data > target_node.parent.data:  # right leaf
+                        target_node.lchild.parent = target_node.parent
+                        target_node.parent.rchild = target_node.lchild
+                    else:
+                        target_node.lchild.parent = target_node.parent
+                        target_node.parent.lchild = target_node.lchild
+                elif target_node.rchild and not target_node.lchild:
+                    # have right child, but no left child
+                    if target_node.data > target_node.parent.data:  # right leaf
+                        target_node.rchild.parent = target_node.parent
+                        target_node.parent.rchild = target_node.rchild
+                    else:
+                        target_node.rchild.parent = target_node.parent
+                        target_node.parent.lchild = target_node.rchild
+                elif target_node.rchild and target_node.lchild:
+                    # have two child
+                    # 1. find the smallest node under the right child
+                    tmp_node = target_node.rchild
+                    while tmp_node.lchild:
+                        tmp_node = tmp_node.lchild
+
+                    # 2. replace it's value to target value
+                    tmp_value = tmp_node.data
+
+                    # 3. delete the tmp_node
+                    self.delete(tmp_value)
+                    target_node.data = tmp_value
+
+                else:
+                    # no child
+                    if not target_node.parent:  # not root node
+                        self.root = None
+                    elif target_node.data > target_node.parent.data:  # right leaf
+                        target_node.parent.rchild = None
+                    else:  # left leaf
+                        target_node.parent.lchild = None
+                del target_node
+                return
+
+    def pre_order(self, root):
+        if root:
+            print(root.data, end=' ')
+            self.pre_order(root.lchild)
+            self.pre_order(root.rchild)
+
+    def in_order(self, root):
+        if root:
+            self.pre_order(root.lchild)
+            print(root.data, end=' ')
+            self.pre_order(root.rchild)
+
+    def post_order(self, root):
+        if root:
+            self.pre_order(root.lchild)
+            self.pre_order(root.rchild)
+            print(root.data, end=' ')
+
+
 if __name__ == '__main__':
     # li = [i for i in range(100)]
     # random.shuffle(li)
@@ -189,10 +315,9 @@ if __name__ == '__main__':
     # out = heap.heap_topk(li_temp, 10)
     # print(out)
 
-
-    # """
-    # file tree
-    # """
+    """
+    file tree
+    """
     # n=Node("hello")
     # m=Node("world")
     # n.children.append(m)
@@ -213,28 +338,74 @@ if __name__ == '__main__':
     """
     binary tree
     """
-    a = BiTreeNode("A")
-    b = BiTreeNode("B")
-    c = BiTreeNode("C")
-    d = BiTreeNode("D")
-    e = BiTreeNode("E")
-    f = BiTreeNode("F")
-    g = BiTreeNode("G")
+    # a = BiTreeNode("A")
+    # b = BiTreeNode("B")
+    # c = BiTreeNode("C")
+    # d = BiTreeNode("D")
+    # e = BiTreeNode("E")
+    # f = BiTreeNode("F")
+    # g = BiTreeNode("G")
+    #
+    # e.lchild = a
+    # e.rchild = g
+    # a.rchild = c
+    # c.lchild = b
+    # c.rchild = d
+    # g.rchild = f
+    #
+    # root = e
+    # root.pre_order()
+    # print()
+    # root.in_order()
+    # print()
+    # root.post_order()
+    # print()
+    # root.level_order()
+    # print()
+    # # print(root.lchild.rchild.data)
 
-    e.lchild = a
-    e.rchild = g
-    a.rchild = c
-    c.lchild = b
-    c.rchild = d
-    g.rchild = f
+    """
+    binary search tree
+    """
+    tree = BST([4, 6, 7, 9, 2, 1, 3, 5, 8])
+    print("\npre_order:")
+    tree.pre_order(tree.root)
+    print("\nin_order:")
+    tree.in_order(tree.root)
+    print("\npost_order:")
+    tree.post_order(tree.root)
+    print()
+    # print()
+    # out1 = tree.query(2)
+    # out1.pre_order()
+    # print()
+    # out2 = tree.query(12)
+    # print(out2)
+    # out3 = tree.query(8)
+    # out3.pre_order()
 
-    root = e
-    root.pre_order()
-    print()
-    root.in_order()
-    print()
-    root.post_order()
-    print()
-    root.level_order()
-    print()
-    # print(root.lchild.rchild.data)
+    # tree.delete(8)
+    # print("\n8 :")
+    # tree.pre_order(tree.root)
+    # print()
+    # tree.insert(8)
+    # tree.pre_order(tree.root)
+    #
+    # tree.delete(7)
+    # print("\n7 :")
+    # tree.pre_order(tree.root)
+    # print()
+    # tree.insert(7)
+    # tree.pre_order(tree.root)
+
+    # tree.delete(2)
+    # print("\n2 :")
+    # tree.pre_order(tree.root)
+    # print()
+    # tree.insert(2)
+    # tree.pre_order(tree.root)
+
+    tree.delete(4)
+    tree.delete(1)
+    tree.delete(8)
+    tree.pre_order(tree.root)
