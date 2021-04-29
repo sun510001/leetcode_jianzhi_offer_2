@@ -176,8 +176,8 @@ class BST:
         self.root = None
         if li:
             for val in li:
-                # self.root = self.insert_rec(self.root, val)  # for function insert
-                self.insert(val)  # for function insert_rec
+                self.root = self.insert_rec(self.root, val)  # for function insert
+                # self.insert(val)  # for function insert_rec
 
     def insert_rec(self, node, val):
         if not node:
