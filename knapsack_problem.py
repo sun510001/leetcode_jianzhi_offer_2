@@ -13,8 +13,6 @@
 """
 from typing import List
 
-import numpy as np
-
 
 class Solution:
     def knapsack_01(self, w_list: List[int], v_list: List[int], c: int) -> int:
@@ -28,14 +26,23 @@ class Solution:
         :param c:
         :return:
         """
-        dp = [[0 for _ in range(c+1)] for _ in range(len(w_list))]
-        for i in range(1, len(w_list)):  # 跳过0
-            for j in range(1, c+1):
-                if w_list[i] > j:  # 外层循环i,如果第i个物品质量大于当前背包容量
-                    dp[i][j] = dp[i - 1][j]
-                else:
-                    dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - w_list[i]] + v_list[i])
-        return dp[-1][-1]
+        # dp = [[0 for _ in range(c+1)] for _ in range(len(w_list))]
+        # for i in range(1, len(w_list)):  # 跳过0
+        #     for j in range(1, c+1):
+        #         if w_list[i] > j:  # 外层循环i,如果第i个物品质量大于当前背包容量
+        #             dp[i][j] = dp[i - 1][j]
+        #         else:
+        #             dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - w_list[i]] + v_list[i])
+        # return dp[-1][-1]
+
+        """
+        优化, 去掉一维
+        """
+        dp = [0 for _ in range(c+1)]
+        for i in range(1, len(w_list)):
+            for j in range(c, w_list[i]-1, -1):
+                dp[j] = max(dp[j], dp[j-w_list[i]]+v_list[i])
+        return dp[-1]
 
 
 if __name__ == '__main__':
