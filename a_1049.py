@@ -46,11 +46,11 @@ class Solution:
         :return: 石头最小的可能重量
         """
         sums = sum(stones)
-        dp = [0] * (sums//2+1)
+        dp = [0] * (sums // 2 + 1)
         for x in stones:
-            for i in range(sums//2, x-1, -1):
-                dp[i] = max(dp[i], dp[i-x]+x)
-        return sums-2*dp[-1]
+            for i in range(sums // 2, x - 1, -1):
+                dp[i] = max(dp[i], dp[i - x] + x)
+        return sums - 2 * dp[-1]
 
 
 if __name__ == '__main__':
