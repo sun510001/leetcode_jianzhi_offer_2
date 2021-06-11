@@ -43,7 +43,7 @@ class Solution:
         else:
             return self.fib(n - 1) + self.fib(n - 2)
 
-    def fib2(self, n: int) -> int:
+    def fib(self, n: int) -> int:
         """
         非递归
         二叉树形式可以画出来, F(5) = F(4) + F(3); F(4) = F(3) + F(2);
@@ -65,32 +65,42 @@ class Solution:
                 dic[i] = dic[i - 1] + dic[i - 2]
         return dic[n] % 1000000007
 
-    def fib3(self, n):
+    def fib(self, n):
         """
         动态规划 S = 1
         循环求余法
-        1 a=0 b=1
-        2 a=b=1 b=a+b=1
-        3 a=b=1 b=a+b=2
-        4 a=b=2 b=a+b=3
         结果取余1000000007, 使结果不会超过范围 int32(2^32)
         T(n) S(1)
+        首几个斐波那契数是: 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89
         """
         if n == 0:
             return 0
-        elif n == 1:
-            return 1
         else:
-            a, b = 0, 1
-            for i in range(2, n + 1):
-                tmp = a
-                a = b
-                b = tmp + b
-            return b % 1000000007
+            a, b = 1, 1
+            for _ in range(n-1):
+                a, b = b, a + b
+            return a % 1000000007
+
+    def fib(self, n):
+        def fibon(n):
+            a, b = 1, 1
+            for _ in range(n):
+                yield a
+                a, b = b, a + b
+
+        if n == 0:
+            return 0
+        else:
+            tmp = 0
+            for x in fibon(n):
+                if x:
+                    print(x)
+                    tmp = x
+            return tmp % 1000000007
 
 
 if __name__ == '__main__':
     input = 5
     s = Solution()
-    out = s.fib3(input)
+    out = s.fib(input)
     print(out)
