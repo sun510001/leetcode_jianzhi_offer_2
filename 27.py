@@ -40,12 +40,13 @@ def create_tree(l):
     :param l:
     :return:
     """
+
     def rec_insert_tree(i):
         n = TreeNode(l[i])
-        if 2*i+1 < len(l):
-            n.left = rec_insert_tree(2*i+1)
-        if 2*i+2 < len(l):
-            n.right = rec_insert_tree(2*i+2)
+        if 2 * i + 1 < len(l):
+            n.left = rec_insert_tree(2 * i + 1)
+        if 2 * i + 2 < len(l):
+            n.right = rec_insert_tree(2 * i + 2)
         return n
 
     if not l:
@@ -55,9 +56,16 @@ def create_tree(l):
 
 class Solution:
     def mirrorTree(self, root: TreeNode) -> TreeNode:
+        """
+        递归
+        :param root:
+        :return:
+        """
+
         if not root:
             return TreeNode(None)
         node = root
+
         def rec_reverse_tree(n):
             n.left, n.right = n.right, n.left
             if n.left:
@@ -71,6 +79,11 @@ class Solution:
         return root
 
     def mirrorTree(self, root: TreeNode) -> TreeNode:
+        """
+        非递归
+        :param root:
+        :return:
+        """
         if not root:
             return TreeNode(None)
         stack = [root]
@@ -81,8 +94,9 @@ class Solution:
             node.left, node.right = node.right, node.left
         return root
 
+
 if __name__ == '__main__':
-    input = [4,2,7,1,3,6,9]
+    input = [4, 2, 7, 1, 3, 6, 9]
     tree = create_tree(input)
     s = Solution()
     out = s.mirrorTree(tree)
