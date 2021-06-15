@@ -64,7 +64,7 @@ class Solution:
 
 
 if __name__ == '__main__':
-    input = [24,69,100,99,79,78,67,36,26,19]
+    input = [24, 69, 100, 99, 79, 78, 67, 36, 26, 19]
     s = Solution()
     out = s.peakIndexInMountainArray(input)
     print(out)
