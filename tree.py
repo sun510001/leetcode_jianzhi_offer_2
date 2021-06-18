@@ -4,6 +4,7 @@ import copy
 import heapq
 import random
 from my_lib import cal_time
+from typing import List
 
 class heap:
     @classmethod
@@ -88,12 +89,35 @@ class heap:
         return k_list
 
 
+
 class Node:
     def __init__(self, name, type='dir'):
         self.name = name
         self.type = type
         self.children = []
         self.parent = None
+
+# Definition for a binary tree node.
+class TreeNode:
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
+
+
+def create_tree(l: List) -> TreeNode:
+    def rec(i):
+        if l[i]:
+            node = TreeNode(l[i])
+            if 2 * i + 1 < len(l):
+                node.left = rec(2 * i + 1)
+            if 2 * i + 2 < len(l):
+                node.right = rec(2 * i + 2)
+            return node
+
+    if len(l) == 0:
+        return None
+    return rec(0)
 
 
 class FileSystemTree:
