@@ -15,9 +15,10 @@ a, b 均可能是负数或 0
 class Solution:
     def add(self, a: int, b: int) -> int:
         """
-        二进制
+        二进制, 位运算
         ~: 全部取反
         ^: 异或
+        &: 与
         :param a:
         :param b:
         :return:
