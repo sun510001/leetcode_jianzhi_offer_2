@@ -46,7 +46,7 @@ class Solution:
             if left == -1: return -1
             right = rec(root.right)
             if right == -1: return -1
-            if abs(left-right) <= 1:
+            if abs(left-right) <= 1:  # 左右深度差
                 return max(left, right) + 1  # 当前node最深的深度
             else:
                 return -1
