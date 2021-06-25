@@ -21,6 +21,21 @@ class ListNode:
                 result = result.next
         return listnode
 
+    def show(self):
+        result = []
+        while self:
+            result.append(self.val)
+            self = self.next
+        return result
+
+    def search(self, target: int):
+        while self:
+            if self.val == target:
+                return self
+            else:
+                self = self.next
+        return None
+
 
 def cal_time(func):
     def func_wrapper(*args, **kwargs):
@@ -196,4 +211,3 @@ if __name__ == '__main__':
     MySort.shell_sort(temp_list)
     temp_list = list_in_new_memory_address(random_list)
     MySort.quick_sort(temp_list)
-
