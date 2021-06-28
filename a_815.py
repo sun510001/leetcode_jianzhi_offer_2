@@ -22,7 +22,7 @@ sum(routes[i].length) <= 105
 0 <= routes[i][j] < 106
 0 <= source, target < 106
 """
-from collections import defaultdict
+from collections import deque, defaultdict
 from typing import List
 
 
@@ -51,22 +51,21 @@ class Solution:
             result = set()
             for i, value in enumerate(routes):
                 if cur in value:
-                    for stop in value:
-                        if stop != cur and stop not in self.visited:
-                            result.add(stop)
-                            self.visited.add(stop)
+                    result |= set(value) - self.visited
+                    self.visited |= result
             return result
 
         if source == target: return 0  # 起点就在目标站时直接返回0
         self.visited = set()
         self.visited.add(source)  # 记录乘坐过的站点
-        stack = [source]  # 保存可能乘坐的站点
+        stack = deque()  # 保存可能乘坐的站点
+        stack.append(source)
         step = 0
 
         while stack:
             size = len(stack)
             for i in range(size):
-                current = stack.pop(0)
+                current = stack.popleft()
                 stack += ride_or_change(current)
             print(stack)
             if target in stack:  # 如果可能的下一站中存在目标站点
@@ -110,7 +109,7 @@ class Solution:
 
 
 if __name__ == '__main__':
-    route = [[1,2,7],[3,6,7]]
+    route = [[1, 2, 7], [3, 6, 7]]
     source = 1
     target = 6
     s = Solution()
