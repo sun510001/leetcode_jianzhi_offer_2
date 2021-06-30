@@ -1,10 +1,11 @@
 # -*- coding:utf-8 -*-
 
-import copy
 import heapq
-import random
-from my_lib import cal_time
+from collections import deque
 from typing import List
+
+from my_lib import cal_time
+
 
 class heap:
     @classmethod
@@ -89,13 +90,13 @@ class heap:
         return k_list
 
 
-
 class Node:
     def __init__(self, name, type='dir'):
         self.name = name
         self.type = type
         self.children = []
         self.parent = None
+
 
 # Definition for a binary tree node.
 class TreeNode:
@@ -106,18 +107,50 @@ class TreeNode:
 
 
 def create_tree(l: List) -> TreeNode:
-    def rec(i):
-        if l[i]:
-            node = TreeNode(l[i])
-            if 2 * i + 1 < len(l):
-                node.left = rec(2 * i + 1)
-            if 2 * i + 2 < len(l):
-                node.right = rec(2 * i + 2)
-            return node
+    """
+    create a treeNode by a list
+    :param l:
+    :return:
+    """
+    if len(l) == 0: return None
+    root = TreeNode(l[0])
+    i = 1
+    queue = deque([root])
+    while queue and i < len(l):
+        node = queue.popleft()
+        if i < len(l) and l[i] != None:  # l[i]=0的时候是需要的, None不需要
+            node.left = TreeNode(l[i])
+            queue.append(node.left)
+        i += 1
+        if i < len(l) and l[i] != None:
+            node.right = TreeNode(l[i])
+            queue.append(node.right)
+        i += 1
+    return root
 
-    if len(l) == 0:
-        return None
-    return rec(0)
+
+def show_tree(root):
+    """
+    用字符串打印二叉树
+    :param root: 二叉树的根结点
+    :return:
+    """
+    if not root: return '[]'  # root为空时, 直接返回
+    queue = deque([root])  # 双向队列中放入根结点
+    result = []
+    while queue:
+        size = len(queue)  # 记录队列长度, for循环时只循环上一次循环的队列部分
+        for _ in range(size):
+            node = queue.popleft()  # 队列最左端出队
+            if node:
+                result.append(str(node.val))  # 结果list中添加node值
+                queue.append(node.left)  # 左节点入队
+                queue.append(node.right)  # 右节点入队
+            else:
+                result.append('null')  # 当前节点为空时, list中加入空节点
+    while result[-1] == 'null':
+        result.pop()  # 删除列表中末尾的空节点
+    return '[' + ','.join(result) + ']'
 
 
 class FileSystemTree:
